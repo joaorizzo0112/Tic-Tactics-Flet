@@ -81,7 +81,8 @@
         "ach_win_title_sequencia_de_empates": "Sequência de Empates",
         "ach_win_desc_sequencia_de_empates": "Empate 3 vezes seguidas.",
         "ach_win_title_vitoria_relampago": "Vitória Relâmpago",
-        "ach_win_desc_vitoria_relampago": "Vença uma partida em apenas 3 jogadas (5 movimentos totais)."
+        "ach_win_desc_vitoria_relampago": "Vença uma partida em apenas 3 jogadas (5 movimentos totais).",
+        "word_player": "Jogador"
     },
     "en": {
         "app_title": "Tic-Tactics",
@@ -165,7 +166,8 @@
         "ach_win_title_sequencia_de_empates": "Draw Streak",
         "ach_win_desc_sequencia_de_empates": "Draw 3 times in a row.",
         "ach_win_title_vitoria_relampago": "Lightning Victory",
-        "ach_win_desc_vitoria_relampago": "Win a match in just 3 moves (5 total moves)."
+        "ach_win_desc_vitoria_relampago": "Win a match in just 3 moves (5 total moves).",
+        "word_player": "Player"
     },
     "es": {
         "app_title": "Tic-Táctica",
@@ -249,6 +251,7 @@
         "ach_win_title_sequencia_de_empates": "Racha de Empates",
         "ach_win_desc_sequencia_de_empates": "Empata 3 veces seguidas.",
         "ach_win_title_vitoria_relampago": "Victoria Relámpago",
-        "ach_win_desc_vitoria_relampago": "Gana una partida en solo 3 jugadas (5 movimientos totales)."
+        "ach_win_desc_vitoria_relampago": "Gana una partida en solo 3 jugadas (5 movimientos totales).",
+        "word_player": "Jugador"
     }
 }

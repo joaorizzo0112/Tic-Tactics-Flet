@@ -5,11 +5,22 @@ import os
 import sys
 import time
 
+# --- FUNÇÃO AUXILIAR PARA CAMINHOS (A MÁGICA) ---
+def resource_path(relative_path):
+    """ Obtém o caminho absoluto para recursos, funciona para dev e para PyInstaller """
+    try:
+        # PyInstaller cria uma pasta temporária e armazena o caminho em _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        # Se estiver rodando no VS Code, pega o diretório atual
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+# ------------------------------------------------
+
 class LocalizationManager:
     def __init__(self, default_lang='pt_br'):
-        # Se em bundle PyInstaller, usa _internal; se em desenvolvimento, usa o pai do diretório
-        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.dirname(__file__)))
-        self.file = os.path.join(base_path, "data", "strings.json")
+        self.file = resource_path(os.path.join("data", "strings.json"))
         self.default_lang = default_lang
         self.current_lang = default_lang
         self.strings = self.load_strings()
@@ -18,12 +29,9 @@ class LocalizationManager:
         try:
             with open(self.file, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
-            print(f"ERRO: Não foi possível carregar o arquivo {self.file}. Usando fallback.")
-            return {
-                "pt_br": {"app_title": "Tic-Tática", "menu_title": "Tic-Tática", "menu_modes": "Modos de Jogo", "tut_general": "Geral", "game_turn": "Vez do Jogador:", "game_score_label": "Placar:", "ach_title": "Conquistas", "stats_title": "Estatísticas", "lang_name_pt": "Português (BR)", "button_back_menu": "Voltar ao Menu", "options_title": "Opções", "modes_title": "Modos de Jogo", "style_title": "Estilo de Jogo", "style_classic": "Clássico", "style_inverted": "Invertido", "style_mined": "Minado", "button_back": "Voltar", "options_theme": "Mudar Tema", "options_reset_score": "Resetar Placar", "options_reset_stats": "Apagar Estatísticas", "dialog_reset_title": "Resetar Estatísticas", "dialog_reset_content": "Tem certeza que deseja apagar todas as estatísticas do jogo e contadores de conquistas? Esta ação é irreversível.", "dialog_reset_confirm": "Resetar Tudo", "snack_stats_reset": "Estatísticas e contadores resetados com sucesso!", "dialog_end_title": "Fim de Jogo!", "dialog_play_again": "Jogar Novamente", "game_win": "venceu!", "game_lose_inverted": "fez 3 em linha e perdeu! Vitória do", "game_draw": "Deu velha! Empate!", "tut_styles": "Estilos", "tut_tips": "Dicas", "options_lang": "Idioma", "lang_name_en": "Inglês", "lang_name_es": "Espanhol", "modes_vs_player": "Jogador vs. Jogador", "modes_vs_easy": "Jogador vs. Bot (Fácil)", "modes_vs_hard": "Jogador vs. Bot (Difícil)"},
-                "en": {"app_title": "Tic-Tactics", "menu_title": "Tic-Tactics", "menu_modes": "Game Modes", "tut_general": "General", "game_turn": "Player Turn:", "game_score_label": "Score:", "ach_title": "Achievements", "stats_title": "Statistics", "lang_name_pt": "Portuguese (BR)", "button_back_menu": "Back to Menu", "options_title": "Options", "modes_title": "Game Modes", "style_title": "Game Style", "style_classic": "Classic", "style_inverted": "Inverted", "style_mined": "Mined", "button_back": "Back", "options_theme": "Change Theme", "options_reset_score": "Reset Score", "options_reset_stats": "Delete Statistics", "dialog_reset_title": "Reset Statistics", "dialog_reset_content": "Are you sure you want to delete all game statistics and achievement counters? This action is irreversible.", "dialog_reset_confirm": "Reset All", "snack_stats_reset": "Statistics and counters reset successfully!", "dialog_end_title": "Game Over!", "dialog_play_again": "Play Again", "game_win": "wins!", "game_lose_inverted": "got 3 in a row and lost! Winner:", "game_draw": "Draw!", "tut_styles": "Styles", "tut_tips": "Tips", "options_lang": "Language", "lang_name_en": "English", "lang_name_es": "Spanish", "modes_vs_player": "Player vs. Player", "modes_vs_easy": "Player vs. Bot (Easy)", "modes_vs_hard": "Player vs. Bot (Hard)"}
-            }
+        except Exception as e:
+            print(f"Erro ao carregar idioma: {e}")
+            return {}
 
     def get_string(self, key):
         return self.strings.get(self.current_lang, {}).get(key, key)
@@ -39,8 +47,7 @@ def _(key):
 
 class StatsManager:
     def __init__(self):
-        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.dirname(__file__)))
-        self.arquivo_stats = os.path.join(base_path, "data", "stats.json")
+        self.arquivo_stats = resource_path(os.path.join("data", "stats.json"))
         self.stats = self.carregar_stats()
     def carregar_stats(self):
         if not os.path.exists(self.arquivo_stats): return self._get_default_stats()
@@ -74,8 +81,7 @@ class StatsManager:
 class ConquistaManager:
     def __init__(self, page):
         self.page = page
-        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.dirname(__file__)))
-        self.arquivo_conquistas = os.path.join(base_path, "data", "conquistas.json")
+        self.arquivo_conquistas = resource_path(os.path.join("data", "conquistas.json"))
         self.conquistas = self.carregar_conquistas()
         self.contadores = {"empates_seguidos": 0, "vitorias_dificil_seguidas": 0}
     def carregar_conquistas(self):
@@ -198,11 +204,12 @@ class TicTacToeGame:
     def finalizar(self,vencedor,linha_vitoria):
         self.jogo_ativo = False
         vencedor_original = vencedor
-        texto_resultado = f"Jogador '{vencedor_original}' {_('game_win')}"
+        
+        texto_resultado = f"{_('word_player')} '{vencedor_original}' {_('game_win')}"
 
         if self.estilo_jogo == "Invertido" and vencedor not in [None, "Empate"]:
             vencedor = "O" if vencedor == "X" else "X"
-            texto_resultado = f"Jogador '{vencedor_original}' {_('game_lose_inverted')} '{vencedor}'!"
+            texto_resultado = f"{_('word_player')} '{vencedor_original}' {_('game_lose_inverted')} '{vencedor}'!"
         
         self.stats.registrar_partida(vencedor, self.modo_jogo_atual)
 
@@ -324,12 +331,22 @@ class TicTacToeGame:
             self.ui["mostrar_tela"]("menu")
 
 def main(page: ft.Page):
+    # A MÁGICA 1: Usamos resource_path para garantir o caminho absoluto da fonte
+    caminho_fonte = resource_path(os.path.join("assets", "pixel.ttf"))
+    
     page.title= _('app_title') 
     page.window_width=420; page.window_height=650; page.window_resizable=False
-    page.window_icon = "assets/icone.png"; page.theme_mode=ft.ThemeMode.DARK
+    
+    # A MÁGICA 2: Para o ícone da JANELA, usamos o nome relativo simples.
+    # O Flet vai achar pq configuramos o assets_dir corretamente lá embaixo.
+    page.window_icon = "icone.png" 
+    
+    page.theme_mode=ft.ThemeMode.DARK
     page.snack_bar = ft.SnackBar(content=ft.Text(""))
     page.vertical_alignment=ft.MainAxisAlignment.CENTER; page.horizontal_alignment=ft.CrossAxisAlignment.CENTER
-    page.padding=20; page.fonts = {"Press Start 2P": "assets/PressStart2P-Regular.ttf"}
+    page.padding=20
+    
+    page.fonts = {"Press Start 2P": caminho_fonte} 
 
     conquistas_manager = ConquistaManager(page)
     stats_manager = StatsManager()
@@ -658,4 +675,5 @@ def main(page: ft.Page):
     page.add(menu_view,modos_view, selecao_estilo_view, game_view,opcoes_view,conquistas_view, stats_view, tutorial_view)
 
 if __name__ == "__main__":
-    ft.app(target=main, assets_dir="assets")
+    # A MÁGICA 3: Garantimos que o Flet ache a pasta 'assets' dentro da bagunça do executável
+    ft.app(target=main, assets_dir=resource_path("assets"))
