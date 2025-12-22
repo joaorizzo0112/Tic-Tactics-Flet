@@ -2,11 +2,14 @@ import flet as ft
 import random
 import json
 import os
+import sys
 import time
 
 class LocalizationManager:
     def __init__(self, default_lang='pt_br'):
-        self.file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "strings.json")
+        # Se em bundle PyInstaller, usa _internal; se em desenvolvimento, usa o pai do diretório
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.dirname(__file__)))
+        self.file = os.path.join(base_path, "data", "strings.json")
         self.default_lang = default_lang
         self.current_lang = default_lang
         self.strings = self.load_strings()
@@ -36,7 +39,8 @@ def _(key):
 
 class StatsManager:
     def __init__(self):
-        self.arquivo_stats = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "stats.json")
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.dirname(__file__)))
+        self.arquivo_stats = os.path.join(base_path, "data", "stats.json")
         self.stats = self.carregar_stats()
     def carregar_stats(self):
         if not os.path.exists(self.arquivo_stats): return self._get_default_stats()
@@ -69,7 +73,11 @@ class StatsManager:
 
 class ConquistaManager:
     def __init__(self, page):
-        self.page = page; self.arquivo_conquistas=os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "conquistas.json"); self.conquistas=self.carregar_conquistas(); self.contadores={"empates_seguidos":0,"vitorias_dificil_seguidas":0}
+        self.page = page
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.dirname(__file__)))
+        self.arquivo_conquistas = os.path.join(base_path, "data", "conquistas.json")
+        self.conquistas = self.carregar_conquistas()
+        self.contadores = {"empates_seguidos": 0, "vitorias_dificil_seguidas": 0}
     def carregar_conquistas(self):
         if not os.path.exists(self.arquivo_conquistas): 
             return {"primeiro_passo":{"nome":"Primeiro Passo","descricao":"Jogue sua primeira partida.","desbloqueada":False},"primeira_vitoria":{"nome":"Primeira Vitória","descricao":"Vença sua primeira partida.","desbloqueada":False},"primeiro_empate":{"nome":"Primeiro Empate","descricao":"Empate uma partida pela primeira vez.","desbloqueada":False},"mestre_do_bot":{"nome":"Mestre do Bot","descricao":"Vença 5x seguidas contra o bot no Difícil.","desbloqueada":False},"invencivel":{"nome":"Invencível","descricao":"Vença 3 partidas seguidas (qualquer modo).","desbloqueada":False},"estrategista":{"nome":"Estrategista","descricao":"Vença uma partida ocupando o centro.","desbloqueada":False},"rei_dos_cantos":{"nome":"Rei dos Cantos","descricao":"Vença uma partida ocupando uma das quinas.","desbloqueada":False},"sequencia_de_empates":{"nome":"Sequência de Empates","descricao":"Empate 3 vezes seguidas.","desbloqueada":False},"vitoria_relampago":{"nome":"Vitória Relâmpago","descricao":"Vença em 3 jogadas (5 movimentos totais).","desbloqueada":False}}
