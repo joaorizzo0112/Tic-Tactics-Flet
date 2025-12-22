@@ -36,8 +36,3 @@ jobs:
         # Verifica estilo (código feio), mas não cancela o build se achar algo (--exit-zero)
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
-    # Comentei a parte de testes abaixo porque você ainda não criou arquivos de teste.
-    # Quando você criar testes no futuro, basta remover o "#" das linhas abaixo.
-    # - name: Test with pytest
-    #   run: |
-    #     pytest
