@@ -1,0 +1,43 @@
+﻿name: Tic-Tactics CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"] # Flet funciona melhor no 3.10+
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        # Instala o Flet (seu jogo)
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Lint with flake8
+      run: |
+        # Verifica erros de sintaxe ou variáveis não usadas
+        # E9, F63, F7, F82 são erros graves
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Verifica estilo (código feio), mas não cancela o build se achar algo (--exit-zero)
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    # Comentei a parte de testes abaixo porque você ainda não criou arquivos de teste.
+    # Quando você criar testes no futuro, basta remover o "#" das linhas abaixo.
+    # - name: Test with pytest
+    #   run: |
+    #     pytest
