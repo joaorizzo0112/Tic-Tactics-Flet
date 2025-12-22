@@ -1,0 +1,24 @@
+{
+    "geral": {
+        "vitorias": 0,
+        "derrotas": 0,
+        "empates": 0,
+        "maior_sequencia_vitorias": 0,
+        "sequencia_atual": 0
+    },
+    "vs_jogador": {
+        "vitorias": 0,
+        "derrotas": 0,
+        "empates": 0
+    },
+    "vs_facil": {
+        "vitorias": 0,
+        "derrotas": 0,
+        "empates": 0
+    },
+    "vs_dificil": {
+        "vitorias": 0,
+        "derrotas": 0,
+        "empates": 0
+    }
+}

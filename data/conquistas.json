@@ -1,0 +1,47 @@
+{
+    "primeiro_passo": {
+        "nome": "Primeiro Passo",
+        "descricao": "Jogue sua primeira partida.",
+        "desbloqueada": true
+    },
+    "primeira_vitoria": {
+        "nome": "Primeira Vitória",
+        "descricao": "Vença sua primeira partida.",
+        "desbloqueada": true
+    },
+    "primeiro_empate": {
+        "nome": "Primeiro Empate",
+        "descricao": "Empate uma partida pela primeira vez.",
+        "desbloqueada": true
+    },
+    "mestre_do_bot": {
+        "nome": "Mestre do Bot",
+        "descricao": "Vença 5 vezes seguidas contra o bot no modo Difícil.",
+        "desbloqueada": false
+    },
+    "invencivel": {
+        "nome": "Invencível",
+        "descricao": "Vença 3 partidas seguidas (qualquer modo).",
+        "desbloqueada": false
+    },
+    "estrategista": {
+        "nome": "Estrategista",
+        "descricao": "Vença uma partida ocupando o centro.",
+        "desbloqueada": true
+    },
+    "rei_dos_cantos": {
+        "nome": "Rei dos Cantos",
+        "descricao": "Vença uma partida ocupando uma das quinas.",
+        "desbloqueada": true
+    },
+    "sequencia_de_empates": {
+        "nome": "Sequência de Empates",
+        "descricao": "Empate 3 vezes seguidas.",
+        "desbloqueada": false
+    },
+    "vitoria_relampago": {
+        "nome": "Vitória Relâmpago",
+        "descricao": "Vença uma partida em apenas 3 jogadas (5 movimentos totais).",
+        "desbloqueada": true
+    }
+}
