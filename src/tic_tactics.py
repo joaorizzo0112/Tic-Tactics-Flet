@@ -5,14 +5,11 @@ import os
 import sys
 import time
 
-# --- FUNÇÃO AUXILIAR PARA CAMINHOS (A MÁGICA) ---
+
 def resource_path(relative_path):
-    """ Obtém o caminho absoluto para recursos, funciona para dev e para PyInstaller """
     try:
-        # PyInstaller cria uma pasta temporária e armazena o caminho em _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
-        # Se estiver rodando no VS Code, pega o diretório atual
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
@@ -331,14 +328,12 @@ class TicTacToeGame:
             self.ui["mostrar_tela"]("menu")
 
 def main(page: ft.Page):
-    # A MÁGICA 1: Usamos resource_path para garantir o caminho absoluto da fonte
+
     caminho_fonte = resource_path(os.path.join("assets", "pixel.ttf"))
     
     page.title= _('app_title') 
     page.window_width=420; page.window_height=650; page.window_resizable=False
     
-    # A MÁGICA 2: Para o ícone da JANELA, usamos o nome relativo simples.
-    # O Flet vai achar pq configuramos o assets_dir corretamente lá embaixo.
     page.window_icon = "icone.png" 
     
     page.theme_mode=ft.ThemeMode.DARK
@@ -675,5 +670,5 @@ def main(page: ft.Page):
     page.add(menu_view,modos_view, selecao_estilo_view, game_view,opcoes_view,conquistas_view, stats_view, tutorial_view)
 
 if __name__ == "__main__":
-    # A MÁGICA 3: Garantimos que o Flet ache a pasta 'assets' dentro da bagunça do executável
+    
     ft.app(target=main, assets_dir=resource_path("assets"))
